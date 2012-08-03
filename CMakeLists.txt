@@ -3,6 +3,8 @@ project(libtsn)
 cmake_minimum_required(VERSION 2.8.3)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/Modules")
 
+add_subdirectory(json-cpp)
+
 find_package(OAuth REQUIRED)
 
 option (BUILD_SHARED_LIBS "Build shared libraries." On)
