@@ -46,6 +46,12 @@ protected:
     User createUser(uint64_t id, std::string screen_name) {
       return User(id,screen_name);
     };
+
+    // Entites
+    // media manipulation functions
+    /** crate Media from json values */
+    Media createMedia(Json::Value root);
+    
     
 };
 }

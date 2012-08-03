@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <map>
 
 #ifdef DOXYGEN
 #define DOXCOMMENT(a) SLASH(**) @returns a */
@@ -147,6 +148,9 @@ private:
 };
 /**
  * @brief coordinates Object
+ *
+ * This is the only object, which could be constructed outside the factory.
+ * You could use this class to submit the coordinate data with a status message
  */
 class Coordinates {
 public:
@@ -207,6 +211,7 @@ public:
         photo
     } type_t;
 
+    typedef std::map <std::string,size_t> sizes_t;
 
 
     RET_PRIV(int64_t,id)
@@ -217,7 +222,7 @@ public:
     RET_PRIV(std::string,media_url)
     RET_PRIV(std::string,media_url_https)
 
-    RET_PRIV(std::vector <size_t>,sizes)
+    RET_PRIV(sizes_t,sizes)
     RET_PRIV(type_t,type)
 
     RET_PRIV(indices_t,indices)
@@ -234,7 +239,7 @@ private:
     std::string _media_url;
     std::string _media_url_https;
 
-    std::vector <size_t> _sizes;
+    sizes_t     _sizes;
     type_t      _type;
 
     indices_t   _indices;
