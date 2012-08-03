@@ -12,5 +12,10 @@ option (BUILD_SHARED_LIBS "Build shared libraries." On)
 set(OAuthClient_SRC ${CMAKE_CURRENT_LIST_DIR}/src/OAuthClient.cpp)
 set(OAuthClient_DEP ${OAUTH_LIBRARY})
 
-add_library(tsn ${OAuthClient_SRC})
-target_link_libraries(tsn ${OAuthClient_DEP})
+set(objectFactory_SRC ${CMAKE_CURRENT_LIST_DIR}/src/objectFactory.cpp)
+set(objectFactory_DEP jsoncpp)
+
+include_directories(${JSONCPP_SOURCE_DIR}/include)
+
+add_library(tsn ${OAuthClient_SRC} ${objectFactory_SRC})
+target_link_libraries(tsn ${OAuthClient_DEP} ${objectFactory_DEP})
