@@ -161,7 +161,8 @@ Url objectFactory::createUrl(Json::Value root)
         VTARGET._indices = make_pair(root["indices"][0].asInt(),root["indices"][1].asInt());
 
 #undef VTARGET
-    return Url;
+    return url;
+}
 }
 
 
