@@ -261,7 +261,7 @@ public:
     RET_PRIV(indices_t,indices)
 
 private:
-    Url() {}
+    Url(std::string url, std::string expanded_url):_url(url),_expanded_url(expanded_url) {}
 
     std::string _url;
     std::string _display_url;

@@ -26,7 +26,7 @@ const char* TIME_FORMAT = "%a %b %d %T %z %Y";
 namespace tsn {
 
 #define SET(v,type) \
-if (VSOURCE.isMember(#v) && VSOURCE[#v].is##type() ) VTARGET._##v = VSOURCE[#v].as##type ();
+if (root.isMember(#v) && root[#v].is##type() ) VTARGET._##v = root[#v].as##type ();
 
 objectFactory::objectFactory()
 {
@@ -53,7 +53,6 @@ User objectFactory::createUser(Json::Value root)
 
     User user(root["id"].asLargestInt(),root["screen_name"].asString());
     // check for the values availible and set them within the object
-#define VSOURCE root
 #define VTARGET user
 
     SET(name,String)
@@ -77,8 +76,8 @@ User objectFactory::createUser(Json::Value root)
     SET(profile_use_background_image,Bool)
 
     //SET(protected,Bool)
-    if (VSOURCE.isMember("protected") && VSOURCE["protected"].isBool() )
-        VTARGET._Protected = VSOURCE["protected"].asBool();
+    if (root.isMember("protected") && root["protected"].isBool() )
+        VTARGET._Protected = root["protected"].asBool();
     SET(verified,Bool)
 
     SET(geo_enabled,Bool)
@@ -93,9 +92,8 @@ User objectFactory::createUser(Json::Value root)
 
     SET(listed_count,Int)
 
-    if (VSOURCE.isMember("created_at") && VSOURCE["created_at"].isString() )
-        VTARGET._created_at = this->api2tm(VSOURCE["created_at"].asString() );
-#undef VSOURCE
+    if (root.isMember("created_at") && root["created_at"].isString() )
+        VTARGET._created_at = this->api2tm(root["created_at"].asString() );
 #undef VTARGET
 
     return user;
@@ -109,7 +107,6 @@ Media objectFactory::createMedia(Json::Value root)
         throw(runtime_error("incomplete dataset")); //TODO create own exception classes
 
     Media media(root["id"].asLargestInt());
-#define VSOURCE root
 #define VTARGET media
     SET(url,String)
     SET(display_url,String)
@@ -123,9 +120,9 @@ Media objectFactory::createMedia(Json::Value root)
     Json::Value::Members::iterator it;
     for(it = members.begin(); it != members.end(); ++it) {
         Media::size_t size;
-        size.h = VSOURCE["sizes"][*it]["h"].asInt();
-        size.w = VSOURCE["sizes"][*it]["w"].asInt();
-        string resize = VSOURCE["sizes"][*it]["resize"].asString();
+        size.h = root["sizes"][*it]["h"].asInt();
+        size.w = root["sizes"][*it]["w"].asInt();
+        string resize = root["sizes"][*it]["resize"].asString();
         if ( resize == "crop" )
             size.resize = Media::crop;
         else if ( resize == "fit" )
@@ -133,19 +130,38 @@ Media objectFactory::createMedia(Json::Value root)
 
         VTARGET._sizes[*it] = size;
     }
-    if ( VSOURCE.isMember("type") ) {
-        string type = VSOURCE["type"].asString();
+    if ( root.isMember("type") ) {
+        string type = root["type"].asString();
         if (type == "photo") {
             VTARGET._type = Media::photo;
         }
     }
-    if ( VSOURCE.isMember("indices") )
-        VTARGET._indices = make_pair(VSOURCE["indices"][0].asInt(),VSOURCE["indices"][1].asInt());
+    if ( root.isMember("indices") )
+        VTARGET._indices = make_pair(root["indices"][0].asInt(),root["indices"][1].asInt());
 
 #undef VTARGET
-#undef VSOURCE
 
     return media;
+}
+
+
+Url objectFactory::createUrl(Json::Value root)
+{
+    // check for the minimum paramter set to checkt that we got realy the data for an url entity
+    if (!root.isMember("url") || !root.isMember("expanded_url"))
+        throw(runtime_error("incomplete dataset")); //TODO create own exception classes
+
+    Url url(root["url"].asString(),root["expanded_url"].asString());
+
+#define VTARGET url
+
+    SET(display_url,String)
+
+    if ( root.isMember("indices") )
+        VTARGET._indices = make_pair(root["indices"][0].asInt(),root["indices"][1].asInt());
+
+#undef VTARGET
+    return Url;
 }
 
 

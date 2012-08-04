@@ -51,6 +51,9 @@ protected:
     // media manipulation functions
     /** crate Media from json values */
     Media createMedia(Json::Value root);
+
+    /** create Url from json values */
+    Url createUrl(Json::Value root);
     
     
 };
