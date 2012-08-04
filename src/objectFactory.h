@@ -54,6 +54,9 @@ protected:
 
     /** create Url from json values */
     Url createUrl(Json::Value root);
+
+    /** create User_Mention from json values */
+    User_Mention createUser_Mention(Json::Value root);
     
     
 };

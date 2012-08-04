@@ -45,6 +45,8 @@ inline struct tm objectFactory::api2tm(string time)
     return date;
 }
 
+//TODO add more exception code to the whole objectFactory
+
 User objectFactory::createUser(Json::Value root)
 {
     // check for needed values to construct an object
@@ -163,6 +165,15 @@ Url objectFactory::createUrl(Json::Value root)
 #undef VTARGET
     return url;
 }
+
+User_Mention objectFactory::createUser_Mention(Json::Value root)
+{
+    // User Mention is a special case, as we have to create a sub-object
+    if (!root.isMember("id") || root.isMember("name") || !root.isMember("indices"))
+        throw(runtime_error("incomplete dataset")); //TODO create own exception classes
+
+    User_Mention mention(User(root["id"].asLargestInt(),root["screen_name"].asString()),make_pair(root["indices"][0].asInt(),root["indices"][1].asInt()));
+    return mention;
 }
 
 
